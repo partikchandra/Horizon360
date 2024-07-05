@@ -3,35 +3,21 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-from appium.options.android import UiAutomator2Options
+import pytest
 
+from utils.driver_factory import get_driver
 from pages.login import login
+@pytest.fixture(scope="module")
 
-
-options = UiAutomator2Options()
-options.platform_name = 'Android'
-options.platform_version = '13'
-options.device_name = '18211JEC202141'
-options.automation_name = 'Appium'
-options.app = "/Users/sharadbagul/Downloads/app-stage1.apk"
-options.no_reset = False
-options.app_wait_activity = "com.toro.horizon360.modules.login.view.LoginActivity"
-options.app_wait_package = "com.toro.horizon360"
 
 def main():
-    driver = webdriver.Remote('http://localhost:4723/wd/hub', options=options)    
-
+    driver = get_driver()
+    yield driver
     # Policy Page
     # WebDriverWait(driver,  20).until(EC.element_to_be_clickable(By.XPATH, '//android.widget.TextView[@text="Save Changes"]')).click()
-    
-    # home_page = Diag(driver)
-    
-    Login = login(driver)
 
-    time.sleep(2)
-    
-    try:
-        Login.onboard()
+    try: 
+        login(driver).login()
 
     except Exception as e:
         print(e)

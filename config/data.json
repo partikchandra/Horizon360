@@ -1,0 +1,10 @@
+[
+    {
+        "user": "default_user",
+        "pass": "default_password"
+    },
+    {
+        "user": "another_user",
+        "pass": "another_password"
+    }
+]
