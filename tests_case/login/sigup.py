@@ -9,7 +9,7 @@ class signup:
     def __init__(self, driver):
         self.driver = driver
     def test_signcase():
-        try:
+        try:login(drive, usertype defaultuser)
             pass
         except:
             pass
