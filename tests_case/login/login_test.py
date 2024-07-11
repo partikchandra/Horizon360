@@ -3,9 +3,8 @@ import json
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
 
-#@pytest.fixture(scope="module")
+# @pytest.fixture(scope='function')
 class LoginTest:
     def __init__(self, driver):
         self.driver = driver
@@ -15,26 +14,25 @@ class LoginTest:
         self.forgot = (By.ID, "com.toro.horizon360:id/al_forgot_password_txt")
         self.sign_up_button = (By.ID, "com.toro.horizon360:id/sign_up_text")
 
-    def load_users(self,file_path):
+    def load_users(self, file_path):
         with open(file_path, 'r') as file:
             return json.load(file)
 
-    def test_login(self):
+    def test_login(self, file_path="config/data.json"):
+        data = self.load_users(file_path)
+        users = data['users']
+        screens = data["screens"]["login"]
 
-            data = self.load_users(file_path)
-            users = data['users']
-            screens = data["screens"]["login"]
+        for user_key in screens:
+            user = screens[user_key]["username"]
+            password = screens[user_key]["password"]
 
-            user = screens[user]["username"]
-            pass1 = screens[user]["password"]
-            
-            for user_type
-            if user in screens:
-                 user= screens[user]["username"]
-                 pass1 = screens[user]["password"]
-            
-            self.login(user,pass1)
-           # time.sleep(2)
+            if user_key == "QA":
+                self.login_QA(user, password)
+            elif  user_key ==  "default_user":
+                self.login_default(user, password)
+            else:
+                self.login_another(user, password)
 
     def login_default(self, user, password):
         try:
@@ -51,4 +49,11 @@ class LoginTest:
             WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(self.sign_in_button)).click()
         except Exception as e:
             print("Error", e)
+    def login_another(self, user, password):
+        try:
+            WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(self.username)).send_keys(user)
+            WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(self.password)).send_keys(password)
+            WebDriverWait(self.driver, 20).until(EC.element_to_be_clickable(self.sign_in_button)).click()
 
+        except Exception as e:
+            print("Error", e)
